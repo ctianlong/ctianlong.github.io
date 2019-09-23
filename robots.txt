@@ -1,0 +1,14 @@
+#hexo robots.txt
+User-agent: *
+Allow: /
+Allow: /archives/
+Disallow: /lib/
+Disallow: /js/
+Disallow: /css/
+Disallow: /fonts/
+Disallow: /fancybox/
+Sitemap: http://blog.tongjilab.cn/search.xml
+Sitemap: http://blog.tongjilab.cn/sitemap.xml
+Sitemap: http://blog.tongjilab.cn/baidusitemap.xml
+
+
