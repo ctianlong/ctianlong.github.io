@@ -169,7 +169,7 @@
                   <span class="post-comments-count join-count" itemprop="commentCount"></span>
                 </a>
               </span>
-            {% elseif theme.valine.enable and theme.valine.appid and theme.valine.appkey %}
+            {% elseif not is_index and theme.valine.enable and theme.valine.appid and theme.valine.appkey %}
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
                 <span class="post-meta-item-icon">
