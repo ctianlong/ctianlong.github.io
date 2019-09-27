@@ -79,7 +79,9 @@ theme: next
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
 - type: git
-  repo: git@github.com:ctianlong/ctianlong.github.io.git
+  repo:
+    github: git@github.com:ctianlong/ctianlong.github.io.git
+    coding: git@git.coding.net:ctianlong/blog.git
 ##repo: https://github.com/ctianlong/ctianlong.github.io.git
   branch: master
   message: 'Daily updated：{{now("YYYY-MM-DD HH:mm:ss")}} by ctianlong'
