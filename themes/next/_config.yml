@@ -491,7 +491,15 @@ alipay: http://static.tongjilab.cn/image/png/alipayQR.png
 # Music
 music:
   enable: false
-  title: 放松一下
+  title: Music
+
+# 背景动画
+background_animation:
+  enable: false
+
+# 页面点击小红心
+love_click:
+  enable: false
 
 # more info please open https://valine.js.org
 valine:

@@ -74,14 +74,19 @@
   {% include '_components/algolia-search/assets.swig' %}
 
   <!-- 背景动画 -->
-  <!--
+  {% if theme.background_animation.enable %}
   <script type="text/javascript" src="/js/src/particle.js"></script>
-  -->
+  {% endif %}
 
   <!-- 页面点击小红心 -->
-  <!--
+  {% if theme.love_click.enable %}
   <script type="text/javascript" src="/js/src/love.js"></script>
-  -->
+  {% endif %}
+
+  <!-- 音乐播放脚本 -->
+  {% if theme.music.enable %}
+  <script type="text/javascript" src="/js/src/music-ctl.js"> </script>
+  {% endif %}
 
 </body>
 </html>
