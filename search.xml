@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[面向对象与设计原则]]></title>
+    <url>%2Fposts%2F5f144119%2F</url>
+    <content type="text"><![CDATA[面向对象的思想与设计模式几大原则。 面向对象 面向对象与设计模式旨在构建可维护、可扩展、可复用、灵活性好的软件应用程序。 类是对对象的抽象；抽象类是对类的抽象；接口是对行为的抽象。 抽象类是自底而上抽象出来的；接口是自顶向下设计出来的。 设计模式原则 开闭原则（Open Close Principle）定义：软件实体（类、模块、函数等）可以扩展，不可修改。对扩展开放，对修改关闭。面对需求变化，对程序的改动是通过增加新代码进行，而不是更改现有代码。实现热插拔的效果，使程序具有更好的扩展性，易于维护和升级。想要达到这样的效果，需要使用接口和抽象类。仅对程序中呈现出频繁变化的那些部分作出抽象，对每个部分都刻意进行抽象不是个好主意。拒绝不成熟的抽象和抽象本身一样重要。 里氏代换原则（Liskov Substitution Principle）定义：所有引用基类的地方必须能透明地使用其子类的对象。里氏代换原则是面向对象设计的基本原则之一。 任何基类可以出现的地方，子类一定可以出现。LSP 是继承复用的基石，只有当派生类可以替换掉基类，且软件单位的功能不受到影响时，基类才能真正被复用，而派生类也能够在基类的基础上增加新的行为。里氏代换原则是对开闭原则的补充。实现开闭原则的关键步骤就是抽象化，而基类与子类的继承关系就是抽象化的具体实现，所以里氏代换原则是对实现抽象化的具体步骤的规范。侧重于子类不应该重写父类方法，但是很多实际场景是不符合的，许多设计模式本身也不符合这个原则。 依赖倒转原则（Dependence Inversion Principle）定义：高层模块不应该依赖于低层模块，两者都应该依赖于抽象。抽象不应该依赖于细节，细节应该依赖于抽象。这个原则是开闭原则的基础。针对接口编程，不针对实现编程。依赖于抽象而不依赖于具体。 接口隔离原则（Interface Segregation Principle）定义：一个类对另一个类的依赖应该建立在最小的接口上。接口最小化，使用多个隔离的接口，比使用单个接口要好，降低类之间的耦合度。由此可见，其实设计模式就是从大型软件架构出发、便于升级和维护的软件设计思想，它强调降低依赖，降低耦合。 迪米特法则，又称最少知道原则（Demeter Principle）定义：一个软件实体应当尽可能少地与其他实体发生相互作用，使得系统功能模块相对独立。一个实体不应该依赖于其它实体太多细节。如果两个类不必彼此直接通信，那么这两个类就不应当发生直接的相互作用。如果其中一个类需要调用另一个类的某一个方法，可以通过第三者转发这个调用。强调类之间的松耦合，类似面向接口编程。 单一职责原则（Single responsibility principle）定义：就一个类而言，应该仅有一个引起它变化的原因。每个类尽量只负责单一功能，高内聚。 另：合成复用原则（Composite Reuse Principle）尽量使用组合/聚合的方式，而不是使用继承。]]></content>
+      <categories>
+        <category>设计模式</category>
+      </categories>
+      <tags>
+        <tag>设计模式</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[Mysql被黑客入侵及安全措施总结]]></title>
     <url>%2Fposts%2Fd82d4f3e%2F</url>
     <content type="text"><![CDATA[一次Mysql服务器被黑客攻击的不幸遭遇。 情况概述今天登陆在腾讯云服务器上搭建的Mysql数据库，发现数据库被黑了，黑客提示十分明显。Mysql中只剩下两个数据库，一个是information_schema，另一个是黑客创建的PLEASE_READ，其中有一张info表，内容如下： Info: Your DB is Backed up at our servers, to restore send 0.2 BTC to the Bitcoin Address then send an email with your server ip Bitcoin_Address: 1F33LEJjdphD6YpaonNCHejwLcgkgDGQW9 Email: mysqldata@mail2tor.com 显然，我这是遇到比特币敲诈了。我的数据在别人的服务器里安然的躺着，需要向黑客支付0.2比特币才有可能恢复。按照当前的汇率，0.2比特币大约为1400人民币，这是我第一次遇到网络敲诈，金额还不小。所幸数据库里并没有值钱的数据，就当是送给黑客了，不过 数据库安全问题 引起了我的注意。 安全措施由于缺乏必要的安全措施和备份机制，数据库中原有的数据均已丢失。为了恢复到Mysql初始的状态，重新安装了Mysql数据库，并且重新创建原先存在的数据库，同时，为了防止再次被黑客入侵，对Mysql进行了一些安全配置。 禁用或限制远程访问。若允许远程访问，需要确保特定主机才拥有访问权。 对用户进行合理授权，应用程序中最好不要直接使用root用户。 限制打开网络socket，此时仍可以建立与Mysql服务器的本地连接。 12[mysqld]skip-networking 强迫Mysql仅监听本机。 12[mysqld]bind-address=127.0.0.1 更改root用户的登录名称和密码。 移除测试数据库和匿名账户及废弃的账户。 禁用LOCAL INFILE。 12[mysqld]set-variable=local-infile=0 删除历史命令记录。 12cat /dev/null &gt; ~/.bash_historycat /dev/null &gt; ~/.mysql_history 及时安装Mysql安全补丁。 使用chroot限制Mysql运行环境。 自动定期备份数据库。]]></content>
