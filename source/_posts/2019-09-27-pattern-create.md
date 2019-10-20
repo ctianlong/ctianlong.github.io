@@ -55,4 +55,4 @@ Cloneable, clone(),深复制、浅复制。
 ### 参考
 
 - 《大话设计模式》
-- [设计模式详解（总纲）- 左潇龙](https://www.cnblogs.com/zuoxiaolong/p/pattern1.html)
+- [设计模式大杂烩（24种设计模式的总结以及学习设计模式的几点建议）- 左潇龙](http://www.zuoxiaolong.com/blog/article.ftl?id=100)
