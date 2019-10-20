@@ -54,4 +54,4 @@ date: 2019-09-23 18:34:36
 ### 参考
 
 - 《大话设计模式》
-- [设计模式详解（总纲）](https://www.cnblogs.com/zuoxiaolong/p/pattern1.html)
+- [设计模式详解（总纲）- 左潇龙](https://www.cnblogs.com/zuoxiaolong/p/pattern1.html)
