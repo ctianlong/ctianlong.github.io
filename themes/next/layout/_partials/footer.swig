@@ -23,5 +23,5 @@
 {% endif %}
 
 <div>
-  <span><a href='http://www.miitbeian.gov.cn' target='_blank'>浙ICP备17004607号</a></span>
+  <span><a href='http://www.beian.miit.gov.cn/' target='_blank'>浙ICP备17004607号</a></span>
 </div>
