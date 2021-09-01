@@ -5,7 +5,7 @@ tags:
 categories:
   - 设计模式
 abbrlink: ef6a83ef
-date: 2019-10-12 15:25:58
+date: 2020-11-12 15:25:58
 ---
 
 行为型设计模式简介。
