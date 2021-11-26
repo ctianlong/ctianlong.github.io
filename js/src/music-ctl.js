@@ -1,1 +1,38 @@
-$(function(){var i=document.getElementById("bgMusic"),n=[{url:"http://static.tongjilab.cn/music/mp3/Sunburst.mp3",title:"sunburst"},{url:"http://static.tongjilab.cn/music/mp3/Victory.mp3",title:"victory"}];function a(){for(var t=$("#bgMusic").attr("src"),i=n[parseInt(Math.random()*n.length)];i.url==t;)i=n[parseInt(Math.random()*n.length)];$("#bgMusic").attr("src",i.url),$("#audioBtn").attr("titleInfo",i.title)}$("#audioBtn").click(function(){var t;i.paused?(i.play(),(t=$("#audioBtn")).children("i").addClass("fa-spin"),t.attr("title","正在播放:"+t.attr("titleInfo"))):(i.pause(),(t=$("#audioBtn")).children("i").removeClass("fa-spin"),t.removeAttr("title"))}),a(),$("#bgMusic").on("ended",function(){a();var t=$("#audioBtn");t.attr("title","正在播放:"+t.attr("titleInfo")),i.play()})});
+$(function(){
+          var music = document.getElementById("bgMusic");
+          var musicArr=[
+            {url:'http://static.tongjilab.cn/music/mp3/Sunburst.mp3',title:"sunburst"},
+            {url:'http://static.tongjilab.cn/music/mp3/Victory.mp3',title:"victory"}
+          ];
+
+          $("#audioBtn").click(function(){
+            if(music.paused){
+              music.play();
+              var $audioBtn = $("#audioBtn");
+              $audioBtn.children("i").addClass("fa-spin");
+              $audioBtn.attr('title',"正在播放:"+$audioBtn.attr('titleInfo'));
+            }else{
+              music.pause();
+              var $audioBtn = $("#audioBtn");
+              $audioBtn.children("i").removeClass("fa-spin");
+              $audioBtn.removeAttr("title");
+            }
+          });
+
+          function randomMusic(){
+            var isone=$("#bgMusic").attr('src');
+            var noone=musicArr[parseInt(Math.random()*musicArr.length)];
+            while(noone.url==isone){noone=musicArr[parseInt(Math.random()*musicArr.length)];}
+            $("#bgMusic").attr('src',noone.url);
+            $("#audioBtn").attr('titleInfo',noone.title);
+          }
+
+          randomMusic();
+
+          $("#bgMusic").on('ended',function(){
+            randomMusic();
+            var $audioBtn = $("#audioBtn");
+            $audioBtn.attr('title',"正在播放:"+$audioBtn.attr('titleInfo'));
+            music.play();
+          });
+        });

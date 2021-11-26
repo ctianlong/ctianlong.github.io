@@ -1,4 +1,547 @@
-<!doctype html><html class="theme-next mist use-motion" lang="zh-Hans"><head><meta name="generator" content="Hexo 3.9.0"><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"><link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css"><link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css"><link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css"><meta name="keywords" content="WebsphereMQ,"><link rel="shortcut icon" type="image/x-icon" href="/aquarius_favicon.ico?v=5.1.0"><meta name="description" content="本文介绍应用程序与WebsphereMQ连接的两种模式，以及对客户机连接模式下报2035错误码给出解决方法。"><meta name="keywords" content="WebsphereMQ"><meta property="og:type" content="article"><meta property="og:title" content="WebsphereMQ V8 解决客户机连接报2035错误码"><meta property="og:url" content="blog.tongjilab.cn/posts/46226b28/index.html"><meta property="og:site_name" content="唯细水静流"><meta property="og:description" content="本文介绍应用程序与WebsphereMQ连接的两种模式，以及对客户机连接模式下报2035错误码给出解决方法。"><meta property="og:locale" content="zh-Hans"><meta property="og:image" content="http://static.tongjilab.cn/blog/20190926235859.png"><meta property="og:image" content="http://static.tongjilab.cn/blog/20190927000022.png"><meta property="og:image" content="http://static.tongjilab.cn/blog/20190927000055.png"><meta property="og:image" content="http://static.tongjilab.cn/blog/20190927000219.png"><meta property="og:image" content="http://static.tongjilab.cn/blog/20190927001434.png"><meta property="og:updated_time" content="2019-09-27T12:06:56.840Z"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="WebsphereMQ V8 解决客户机连接报2035错误码"><meta name="twitter:description" content="本文介绍应用程序与WebsphereMQ连接的两种模式，以及对客户机连接模式下报2035错误码给出解决方法。"><meta name="twitter:image" content="http://static.tongjilab.cn/blog/20190926235859.png"><script type="text/javascript" id="hexo.configurations">var NexT=window.NexT||{},CONFIG={root:"/",scheme:"Mist",sidebar:{display:"hide"},fancybox:!0,motion:!0,duoshuo:{userId:"undefined",author:"博主"},algolia:{applicationID:"",apiKey:"",indexName:"",hits:{per_page:10},labels:{input_placeholder:"Search for Posts",hits_empty:"We didn't find any results for the search: ${query}",hits_stats:"${hits} results found in ${time} ms"}}}</script><link rel="canonical" href="blog.tongjilab.cn/posts/46226b28/"><title> WebsphereMQ V8 解决客户机连接报2035错误码 | 唯细水静流</title></head><body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans"><div class="container one-collumn page-post-detail"><div class="headband"></div><header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="header-inner"><div class="site-meta"><div class="custom-logo-site-title"><a href="/" class="brand" rel="start"><span class="logo-line-before"><i></i></span> <span class="site-title">唯细水静流</span><span class="logo-line-after"><i></i></span></a></div><h1 class="site-subtitle" itemprop="description">点滴成江海，跬步至千里</h1></div><div class="site-nav-toggle"> <button><span class="btn-bar"></span><span class="btn-bar"></span><span class="btn-bar"></span></button></div><nav class="site-nav"><ul id="menu" class="menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i><br> 首页</a></li><li class="menu-item menu-item-archives"><a href="/archives" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i><br> 归档</a></li><li class="menu-item menu-item-categories"><a href="/categories" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i><br> 分类</a></li><li class="menu-item menu-item-tags"><a href="/tags" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i><br> 标签</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i><br> 关于</a></li><li class="menu-item menu-item-search"><a href="javascript:;" class="popup-trigger"><i class="menu-item-icon fa fa-search fa-fw"></i><br> 搜索</a></li></ul><div class="site-search"><div class="popup"><span class="search-icon fa fa-search"></span> <input type="text" id="local-search-input"><div id="local-search-result"></div> <span class="popup-btn-close">close</span></div></div></nav></div></header><main id="main" class="main"><div class="main-inner"><div class="content-wrap"><div id="content" class="content"><div id="posts" class="posts-expand"><article class="post post-type-normal" itemscope itemtype="http://schema.org/Article"><link itemprop="mainEntityOfPage" href="blog.tongjilab.cn/posts/46226b28/"><span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="name" content="ctianlong"><meta itemprop="description" content><meta itemprop="image" content="http://s.gravatar.com/avatar/f9718bcb9f062c87ee1752d21dce397a?s=80"></span><span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content="唯细水静流"> <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject"><img style="display:none" itemprop="url image" alt="唯细水静流" src></span></span><header class="post-header"><h2 class="post-title" itemprop="name headline"> WebsphereMQ V8 解决客户机连接报2035错误码</h2><div class="post-meta"><span class="post-time"><span class="post-meta-item-icon"><i class="fa fa-calendar-o"></i></span> <span class="post-meta-item-text">发表于</span> <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-06T16:34:36+08:00">2017-02-06</time></span> <span class="post-category"><span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-folder-o"></i></span> <span class="post-meta-item-text">分类于</span> <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/MQ/" itemprop="url" rel="index"><span itemprop="name">MQ</span></a></span></span> <span class="post-comments-count"><span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-comment-o"></i></span><a href="/posts/46226b28/#comments" itemprop="discussionUrl"><span class="post-comments-count valine-comment-count" data-xid="/posts/46226b28/" itemprop="commentCount"></span></a></span> <span class="post-meta-divider">|</span><span class="page-pv"><i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body" itemprop="articleBody"><p>本文介绍应用程序与<code>WebsphereMQ</code>连接的两种模式，以及对客户机连接模式下报2035错误码给出解决方法。</p><a id="more"></a><h2 id="连接模式"><a href="#连接模式" class="headerlink" title="连接模式"></a>连接模式</h2><p>应用程序与MQ服务器端的连接模式有两种：<strong>本地绑定</strong> 和 <strong>客户机连接</strong>。本地绑定模式仅适用于应用程序和MQ服务器运行在同一台机器上，而客户机连接模式则没有此限制，可用于两者运行在不同机器或同一台机器上。不过当应用程序和和MQ 服务器运行于同一台机器上时，一般推荐使用本地绑定模式，该模式下两者通过进程间通讯 (IPC) 协议进行通信，传输效率较高，且不受网络状况影响。</p><ul><li>本地绑定模式配置比较简单，一般情况下，只要在应用程序中提供队列管理器名称，即可连接到本地MQ服务器上的队列管理器上，不需要提供MQ服务器主机名，监听端口和服务器连接通道名称。</li><li>客户机连接模式比本地绑定模式配置稍微复杂，需要在MQ服务器中创建服务器连接通道，注意此处的通道类型为服务器连接通道，该通道名称需要在应用程序中配置，比如配置在<code>MQEnvironment.channel</code>属性中，此外还需要配置队列管理器所在的主机名，监听端口。</li></ul><h2 id="解决客户机连接报2035错误码"><a href="#解决客户机连接报2035错误码" class="headerlink" title="解决客户机连接报2035错误码"></a>解决客户机连接报2035错误码</h2><p>本地绑定模式的连接一般不会出什么问题，而在客户机连接模式时可能出现<code>MQRC_NOT_AUTHORIZED - 2035</code>错误，解决这个问题需要注意以下几点。</p><h4 id="队列管理器是否开启通道认证记录"><a href="#队列管理器是否开启通道认证记录" class="headerlink" title="队列管理器是否开启通道认证记录"></a>队列管理器是否开启通道认证记录</h4><p>通道认证记录用来允许或阻止客户端应用程序对MQ队列管理器的连接，如果开启了，则需要保证当前的通道认证记录中的配置项允许你的应用程序通过你选定的服务器连接通道进行连接。常见的认证规则可以通过用户名、IP地址等进行允许或阻止连接的控制，具体的配置方法这里不作详述，需要注意的是队列管理器内置的系统对象，包括各种通道和通道认证记录，可以通过下图所示方式在MQ Explorer查看。如果你使用的是队列管理器内置的服务器连接通道，比如<code>SYSTEM.DEF.SVRCONN</code>，则需要考虑内置的通道认证记录，比如默认的<code>SYSTEM.*</code> 配置禁用了所有的系统通道，可以将该配置项删除，也可以修改该配置项。</p><center><img style="border-radius:.3125em;box-shadow:0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08)" src="http://static.tongjilab.cn/blog/20190926235859.png"><div style="display:inline-block;color:#999;padding:2px">队列管理器内置的各种系统通道</div></center><center><img style="border-radius:.3125em;box-shadow:0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08)" src="http://static.tongjilab.cn/blog/20190927000022.png"><div style="display:inline-block;color:#999;padding:2px">队列管理器内置的通道认证记录</div></center><p>关于通道认证记录所造成的访问问题，最简单直接的方式便是将通道认证记录功能关闭，不过这样也就失去了对客户应用程序的连接授权控制。可以通过命令行指令关闭通道认证记录。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">RUNMQSC 队列管理器名称</span><br><span class="line">ALTER QMGR CHLAUTH(DISABLED)</span><br></pre></td></tr></table></figure><p>也可以通过MQ Explorer关闭。</p><center><img style="border-radius:.3125em;box-shadow:0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08)" src="http://static.tongjilab.cn/blog/20190927000055.png"></center><h4 id="注意服务器连接通道的MCAUSER（MCA用户标识）属性"><a href="#注意服务器连接通道的MCAUSER（MCA用户标识）属性" class="headerlink" title="注意服务器连接通道的MCAUSER（MCA用户标识）属性"></a>注意服务器连接通道的<code>MCAUSER</code>（MCA用户标识）属性</h4><p>该属性表示通过该通道连接的应用程序在和队列管理器进行通信时所使用的用户名称，其值必须为MQ服务器上的<code>mqm</code>组内的用户，否则便会出现2035错误。需要注意，如果<code>MCAUSER</code>为空，则使用运行MQ应用程序所在的操作系统上的用户名称；如果<code>MCAUSER</code>不为空，则使用该值作为应用程序连接通道时使用的用户名称。</p><center><img style="border-radius:.3125em;box-shadow:0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08)" src="http://static.tongjilab.cn/blog/20190927000219.png"></center><p>可以通过命令行指令修改：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">RUNMQSC 队列管理器名称</span><br><span class="line">ALTER CHL(通道名) CHLTYPE(SVRCONN) MCAUSER(<span class="string">'指定的用户标识'</span>)</span><br></pre></td></tr></table></figure><h4 id="V8版本与服务器连接默认需要密码认证"><a href="#V8版本与服务器连接默认需要密码认证" class="headerlink" title="V8版本与服务器连接默认需要密码认证"></a>V8版本与服务器连接默认需要密码认证</h4><p>网上很多资料关于解决2035错误的方法都是对于Websphere MQ V7.x 的，我使用的是V8.0，使用网上的解决方法仍然会报2035错误，后来发现在V8.0中需要多注意一个配置才能解决2035错误。参考：<a href="http://stackoverflow.com/questions/25911557/websphere-mq-v8-mqrc-not-authorized-2035" rel="external nofollow noopener noreferrer" target="_blank">http://stackoverflow.com/questions/25911557/websphere-mq-v8-mqrc-not-authorized-2035</a>。</p><p><strong>在V8中，与服务器的连接默认需要密码去认证</strong>，可以通过配置队列管理器的连接认证选项来解决。</p><ul><li>通过以下命令行指令，将连接认证选项中的<code>SYSTEM.DEFAULT.AUTHINFO.IDPWOS</code>的属性配置为<code>OPTIONAL</code>。</li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ALTER AUTHINFO(SYSTEM.DEFAULT.AUTHINFO.IDPWOS) AUTHTYPE(IDPWOS) CHCKCLNT(OPTIONAL)</span><br></pre></td></tr></table></figure><ul><li>或者直接将连接认证选项置为空，将其完全关闭，指令如下.</li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ALTER QMGR CONNAUTH(<span class="string">''</span>)</span><br></pre></td></tr></table></figure><p>在执行完上述两条命令中的任一条后，都需要刷新连接认证的缓存，指令如下。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">REFRESH SECURITY TYPE(CONNAUTH)</span><br></pre></td></tr></table></figure><p>除了上面两种命令行方式，也可以通过MQ Explorer关闭连接认证，如下图，在队列管理器的扩展属性中将连接认证一栏置为空即可。</p><center><img style="border-radius:.3125em;box-shadow:0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08)" src="http://static.tongjilab.cn/blog/20190927001434.png"></center><hr><p><strong><em>通过以上注意点，一般可以解决连接MQ服务器的2035错误。</em></strong></p><blockquote class="blockquote-center">-------------本文结束<i class="fa fa-heart"></i> 感谢您的阅读-------------</blockquote></div><div></div><div><div style="padding:10px 0;margin:20px auto;width:90%;text-align:center"><div></div> <button id="rewardButton" disable="enable" onclick='var qr=document.getElementById("QR");"none"===qr.style.display?qr.style.display="block":qr.style.display="none"'> <span>赏</span></button><div id="QR" style="display:none"><div id="wechat" style="display:inline-block"> <img id="wechat_qr" src="http://static.tongjilab.cn/image/png/wepayQR.png" alt="ctianlong WeChat Pay"><p>微信打赏</p></div><div id="alipay" style="display:inline-block"> <img id="alipay_qr" src="http://static.tongjilab.cn/image/png/alipayQR.png" alt="ctianlong Alipay"><p>支付宝打赏</p></div></div></div></div><footer class="post-footer"><div class="post-tags"> <a href="/tags/WebsphereMQ/" rel="tag"># WebsphereMQ</a></div><div class="post-nav"><div class="post-nav-next post-nav-item"></div><span class="post-nav-divider"></span><div class="post-nav-prev post-nav-item"> <a href="/posts/d82d4f3e/" rel="prev" title="Mysql被黑客入侵及安全措施总结">Mysql被黑客入侵及安全措施总结<i class="fa fa-chevron-right"></i></a></div></div></footer></article><div class="post-spread"></div></div></div><div class="comments" id="comments"></div><script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script><script src="//cdn.jsdelivr.net/npm/valine/dist/Valine.min.js"></script><script type="text/javascript">
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="WebsphereMQ,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/aquarius_favicon.ico?v=5.1.0">
+
+
+
+
+
+
+<meta name="description" content="本文介绍应用程序与WebsphereMQ连接的两种模式，以及对客户机连接模式下报2035错误码给出解决方法。">
+<meta name="keywords" content="WebsphereMQ">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WebsphereMQ V8 解决客户机连接报2035错误码">
+<meta property="og:url" content="blog.tongjilab.cn/posts/46226b28/index.html">
+<meta property="og:site_name" content="唯细水静流">
+<meta property="og:description" content="本文介绍应用程序与WebsphereMQ连接的两种模式，以及对客户机连接模式下报2035错误码给出解决方法。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://static.tongjilab.cn/blog/20190926235859.png">
+<meta property="og:image" content="http://static.tongjilab.cn/blog/20190927000022.png">
+<meta property="og:image" content="http://static.tongjilab.cn/blog/20190927000055.png">
+<meta property="og:image" content="http://static.tongjilab.cn/blog/20190927000219.png">
+<meta property="og:image" content="http://static.tongjilab.cn/blog/20190927001434.png">
+<meta property="og:updated_time" content="2019-09-27T12:06:56.840Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="WebsphereMQ V8 解决客户机连接报2035错误码">
+<meta name="twitter:description" content="本文介绍应用程序与WebsphereMQ连接的两种模式，以及对客户机连接模式下报2035错误码给出解决方法。">
+<meta name="twitter:image" content="http://static.tongjilab.cn/blog/20190926235859.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"display":"hide"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="blog.tongjilab.cn/posts/46226b28/">
+
+
+
+
+
+  <title> WebsphereMQ V8 解决客户机连接报2035错误码 | 唯细水静流 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+  <div class="container one-collumn  page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">唯细水静流</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <h1 class="site-subtitle" itemprop="description">点滴成江海，跬步至千里</h1>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+
+
+      <!-- 音乐播放页面元素 -->
+          
+
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="blog.tongjilab.cn/posts/46226b28/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="ctianlong">
+    <meta itemprop="description" content>
+    <meta itemprop="image" content="http://s.gravatar.com/avatar/f9718bcb9f062c87ee1752d21dce397a?s=80">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="唯细水静流">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="唯细水静流" src>
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                WebsphereMQ V8 解决客户机连接报2035错误码
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-06T16:34:36+08:00">
+                2017-02-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/MQ/" itemprop="url" rel="index">
+                    <span itemprop="name">MQ</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/posts/46226b28/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/posts/46226b28/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-eye"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文介绍应用程序与<code>WebsphereMQ</code>连接的两种模式，以及对客户机连接模式下报2035错误码给出解决方法。</p>
+<a id="more"></a>
+<h2 id="连接模式"><a href="#连接模式" class="headerlink" title="连接模式"></a>连接模式</h2><p>应用程序与MQ服务器端的连接模式有两种：<strong>本地绑定</strong> 和 <strong>客户机连接</strong>。本地绑定模式仅适用于应用程序和MQ服务器运行在同一台机器上，而客户机连接模式则没有此限制，可用于两者运行在不同机器或同一台机器上。不过当应用程序和和MQ 服务器运行于同一台机器上时，一般推荐使用本地绑定模式，该模式下两者通过进程间通讯 (IPC) 协议进行通信，传输效率较高，且不受网络状况影响。</p>
+<ul>
+<li>本地绑定模式配置比较简单，一般情况下，只要在应用程序中提供队列管理器名称，即可连接到本地MQ服务器上的队列管理器上，不需要提供MQ服务器主机名，监听端口和服务器连接通道名称。</li>
+<li>客户机连接模式比本地绑定模式配置稍微复杂，需要在MQ服务器中创建服务器连接通道，注意此处的通道类型为服务器连接通道，该通道名称需要在应用程序中配置，比如配置在<code>MQEnvironment.channel</code>属性中，此外还需要配置队列管理器所在的主机名，监听端口。</li>
+</ul>
+<h2 id="解决客户机连接报2035错误码"><a href="#解决客户机连接报2035错误码" class="headerlink" title="解决客户机连接报2035错误码"></a>解决客户机连接报2035错误码</h2><p>本地绑定模式的连接一般不会出什么问题，而在客户机连接模式时可能出现<code>MQRC_NOT_AUTHORIZED - 2035</code>错误，解决这个问题需要注意以下几点。</p>
+<h4 id="队列管理器是否开启通道认证记录"><a href="#队列管理器是否开启通道认证记录" class="headerlink" title="队列管理器是否开启通道认证记录"></a>队列管理器是否开启通道认证记录</h4><p>通道认证记录用来允许或阻止客户端应用程序对MQ队列管理器的连接，如果开启了，则需要保证当前的通道认证记录中的配置项允许你的应用程序通过你选定的服务器连接通道进行连接。常见的认证规则可以通过用户名、IP地址等进行允许或阻止连接的控制，具体的配置方法这里不作详述，需要注意的是队列管理器内置的系统对象，包括各种通道和通道认证记录，可以通过下图所示方式在MQ Explorer查看。如果你使用的是队列管理器内置的服务器连接通道，比如<code>SYSTEM.DEF.SVRCONN</code>，则需要考虑内置的通道认证记录，比如默认的<code>SYSTEM.*</code> 配置禁用了所有的系统通道，可以将该配置项删除，也可以修改该配置项。</p>
+<center><img style="border-radius: 0.3125em; box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" src="http://static.tongjilab.cn/blog/20190926235859.png"><div style="display: inline-block; color: #999; padding: 2px;">队列管理器内置的各种系统通道</div></center>
+
+<center><img style="border-radius: 0.3125em; box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" src="http://static.tongjilab.cn/blog/20190927000022.png"><div style="display: inline-block; color: #999; padding: 2px;">队列管理器内置的通道认证记录</div></center>
+
+<p>关于通道认证记录所造成的访问问题，最简单直接的方式便是将通道认证记录功能关闭，不过这样也就失去了对客户应用程序的连接授权控制。可以通过命令行指令关闭通道认证记录。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">RUNMQSC 队列管理器名称</span><br><span class="line">ALTER QMGR CHLAUTH(DISABLED)</span><br></pre></td></tr></table></figure>
+<p>也可以通过MQ Explorer关闭。</p>
+<center><img style="border-radius: 0.3125em; box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" src="http://static.tongjilab.cn/blog/20190927000055.png"></center>
+
+<h4 id="注意服务器连接通道的MCAUSER（MCA用户标识）属性"><a href="#注意服务器连接通道的MCAUSER（MCA用户标识）属性" class="headerlink" title="注意服务器连接通道的MCAUSER（MCA用户标识）属性"></a>注意服务器连接通道的<code>MCAUSER</code>（MCA用户标识）属性</h4><p>该属性表示通过该通道连接的应用程序在和队列管理器进行通信时所使用的用户名称，其值必须为MQ服务器上的<code>mqm</code>组内的用户，否则便会出现2035错误。需要注意，如果<code>MCAUSER</code>为空，则使用运行MQ应用程序所在的操作系统上的用户名称；如果<code>MCAUSER</code>不为空，则使用该值作为应用程序连接通道时使用的用户名称。</p>
+<center><img style="border-radius: 0.3125em; box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" src="http://static.tongjilab.cn/blog/20190927000219.png"></center>
+
+<p>可以通过命令行指令修改：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">RUNMQSC 队列管理器名称</span><br><span class="line">ALTER CHL(通道名) CHLTYPE(SVRCONN) MCAUSER(<span class="string">'指定的用户标识'</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="V8版本与服务器连接默认需要密码认证"><a href="#V8版本与服务器连接默认需要密码认证" class="headerlink" title="V8版本与服务器连接默认需要密码认证"></a>V8版本与服务器连接默认需要密码认证</h4><p>网上很多资料关于解决2035错误的方法都是对于Websphere MQ V7.x 的，我使用的是V8.0，使用网上的解决方法仍然会报2035错误，后来发现在V8.0中需要多注意一个配置才能解决2035错误。参考：<a href="http://stackoverflow.com/questions/25911557/websphere-mq-v8-mqrc-not-authorized-2035" rel="external nofollow noopener noreferrer" target="_blank">http://stackoverflow.com/questions/25911557/websphere-mq-v8-mqrc-not-authorized-2035</a>。</p>
+<p><strong>在V8中，与服务器的连接默认需要密码去认证</strong>，可以通过配置队列管理器的连接认证选项来解决。</p>
+<ul>
+<li>通过以下命令行指令，将连接认证选项中的<code>SYSTEM.DEFAULT.AUTHINFO.IDPWOS</code>的属性配置为<code>OPTIONAL</code>。</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ALTER AUTHINFO(SYSTEM.DEFAULT.AUTHINFO.IDPWOS) AUTHTYPE(IDPWOS) CHCKCLNT(OPTIONAL)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>或者直接将连接认证选项置为空，将其完全关闭，指令如下.</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ALTER QMGR CONNAUTH(<span class="string">''</span>)</span><br></pre></td></tr></table></figure>
+<p>在执行完上述两条命令中的任一条后，都需要刷新连接认证的缓存，指令如下。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">REFRESH SECURITY TYPE(CONNAUTH)</span><br></pre></td></tr></table></figure>
+<p>除了上面两种命令行方式，也可以通过MQ Explorer关闭连接认证，如下图，在队列管理器的扩展属性中将连接认证一栏置为空即可。</p>
+<center><img style="border-radius: 0.3125em; box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" src="http://static.tongjilab.cn/blog/20190927001434.png"></center>
+
+<hr>
+<p><strong><em>通过以上注意点，一般可以解决连接MQ服务器的2035错误。</em></strong></p>
+
+
+<blockquote class="blockquote-center">-------------本文结束 <i class="fa fa-heart"></i> 感谢您的阅读-------------</blockquote>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div></div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="http://static.tongjilab.cn/image/png/wepayQR.png" alt="ctianlong WeChat Pay">
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="http://static.tongjilab.cn/image/png/alipayQR.png" alt="ctianlong Alipay">
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/WebsphereMQ/" rel="tag"># WebsphereMQ</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/d82d4f3e/" rel="prev" title="Mysql被黑客入侵及安全措施总结">
+                Mysql被黑客入侵及安全措施总结 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+  
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/valine/dist/Valine.min.js"></script>
+    <script type="text/javascript">
       var GUEST = ['nick','mail','link'];
       var guest = 'nick,mail,link';
       guest = guest.split(',').filter(item=>{
@@ -15,4 +558,434 @@
           guest_info:guest,
           pageSize:'10' || 10
       });
-    </script></div><div class="sidebar-toggle"><div class="sidebar-toggle-line-wrap"><span class="sidebar-toggle-line sidebar-toggle-line-first"></span><span class="sidebar-toggle-line sidebar-toggle-line-middle"></span><span class="sidebar-toggle-line sidebar-toggle-line-last"></span></div></div><aside id="sidebar" class="sidebar"><div class="sidebar-inner"><ul class="sidebar-nav motion-element"><li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap"> 文章目录</li><li class="sidebar-nav-overview" data-target="site-overview"> 站点概览</li></ul><section class="site-overview sidebar-panel"><div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person"> <img class="site-author-image" itemprop="image" src="http://s.gravatar.com/avatar/f9718bcb9f062c87ee1752d21dce397a?s=80" alt="ctianlong"><p class="site-author-name" itemprop="name">ctianlong</p><p class="site-description motion-element" itemprop="description"></p></div><nav class="site-state motion-element"><div class="site-state-item site-state-posts"> <a href="/archives"><span class="site-state-item-count">8</span> <span class="site-state-item-name">日志</span></a></div><div class="site-state-item site-state-categories"> <a href="/categories"><span class="site-state-item-count">6</span> <span class="site-state-item-name">分类</span></a></div><div class="site-state-item site-state-tags"> <a href="/tags"><span class="site-state-item-count">9</span> <span class="site-state-item-name">标签</span></a></div></nav><div class="links-of-author motion-element"><span class="links-of-author-item"><a href="https://github.com/ctianlong" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i> GitHub</a></span></div></section><section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active"><div class="post-toc"><div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#连接模式"><span class="nav-text">连接模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解决客户机连接报2035错误码"><span class="nav-text">解决客户机连接报2035错误码</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#队列管理器是否开启通道认证记录"><span class="nav-text">队列管理器是否开启通道认证记录</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#注意服务器连接通道的MCAUSER（MCA用户标识）属性"><span class="nav-text">注意服务器连接通道的MCAUSER（MCA用户标识）属性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#V8版本与服务器连接默认需要密码认证"><span class="nav-text">V8版本与服务器连接默认需要密码认证</span></a></li></ol></li></ol></div></div></section></div></aside></div></main><footer id="footer" class="footer"><div class="footer-inner"><div class="copyright"> &copy; 2019 - <span itemprop="copyrightYear">2021</span><span class="with-love" id="animate"><i class="fa fa-heartbeat"></i></span> <span class="author" itemprop="copyrightHolder"><a href="https://github.com/ctianlong" target="_blank">ctianlong</a></span></div><div> <span><a href="http://www.beian.miit.gov.cn/" target="_blank" rel="external nofollow noopener noreferrer">浙ICP备17004607号</a></span></div><div class="busuanzi-count"><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span class="site-uv"><i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span><span class="site-pv"><i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span></span></div></div></footer><div class="back-to-top"><i class="fa fa-arrow-up"></i></div></div><script type="text/javascript">"[object Function]"!==Object.prototype.toString.call(window.Promise)&&(window.Promise=null)</script><script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script><script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script><script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script><script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script><script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script><script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script><script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script><script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script><script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script><script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script><script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script><script type="text/javascript">var isfetched=!1,search_path="search.xml";0==search_path.length&&(search_path="search.xml");var path="/"+search_path;function proceedsearch(){$("body").append('<div class="popoverlay">').css("overflow","hidden"),$(".popup").toggle()}var searchFunc=function(e,c,n){"use strict";$.ajax({url:e,dataType:"xml",async:!0,success:function(e){isfetched=!0,$(".popup").detach().appendTo(".header-inner");var t=$("entry",e).map(function(){return{title:$("title",this).text(),content:$("content",this).text(),url:$("url",this).text()}}).get(),a=document.getElementById(c),r=document.getElementById(n);a.addEventListener("input",function(){var u=0,d='<ul class="search-result-list">',f=this.value.trim().toLowerCase().split(/[\s\-]+/);r.innerHTML="",1<this.value.trim().length&&t.forEach(function(e){var a=!1,r=e.title.trim().toLowerCase(),c=e.content.trim().replace(/<[^>]+>/g,"").toLowerCase(),t=decodeURIComponent(e.url),n=-1,s=-1,o=-1;if(""!=r&&f.forEach(function(e,t){n=r.indexOf(e),s=c.indexOf(e),(0<=n||0<=s)&&(a=!0,0==t&&(o=s))}),a){u+=1,d+="<li><a href='"+t+"' class='search-result-title'>"+r+"</a>";var i=e.content.trim().replace(/<[^>]+>/g,"");if(0<=o){var l=o-20,p=o+80;l<0&&(l=0),0==l&&(p=50),p>i.length&&(p=i.length);var h=i.substring(l,p);f.forEach(function(e){var t=new RegExp(e,"gi");h=h.replace(t,'<b class="search-keyword">'+e+"</b>")}),d+='<p class="search-result">'+h+"...</p>"}d+="</li>"}}),d+="</ul>",0==u&&(d='<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'),""==f&&(d='<div id="no-result"><i class="fa fa-search fa-5x" /></div>'),r.innerHTML=d}),proceedsearch()}})};$(".popup-trigger").click(function(e){e.stopPropagation(),0==isfetched?searchFunc(path,"local-search-input","local-search-result"):proceedsearch()}),$(".popup-btn-close").click(function(e){$(".popup").hide(),$(".popoverlay").remove(),$("body").css("overflow","")}),$(".popup").click(function(e){e.stopPropagation()})</script><script>!function(){var t=document.createElement("script"),e=window.location.protocol.split(":")[0];t.src="https"===e?"https://zz.bdstatic.com/linksubmit/push.js":"http://push.zhanzhang.baidu.com/push.js";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}()</script></body></html>
+    </script>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="http://s.gravatar.com/avatar/f9718bcb9f062c87ee1752d21dce397a?s=80" alt="ctianlong">
+          <p class="site-author-name" itemprop="name">ctianlong</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/ctianlong" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#连接模式"><span class="nav-text">连接模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解决客户机连接报2035错误码"><span class="nav-text">解决客户机连接报2035错误码</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#队列管理器是否开启通道认证记录"><span class="nav-text">队列管理器是否开启通道认证记录</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#注意服务器连接通道的MCAUSER（MCA用户标识）属性"><span class="nav-text">注意服务器连接通道的MCAUSER（MCA用户标识）属性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#V8版本与服务器连接默认需要密码认证"><span class="nav-text">V8版本与服务器连接默认需要密码认证</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2019 - 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heartbeat"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder"><a href="https://github.com/ctianlong" target="_blank">ctianlong</a></span>
+</div>
+
+
+
+
+<div>
+  <span><a href="http://www.beian.miit.gov.cn/" target="_blank" rel="external nofollow noopener noreferrer">浙ICP备17004607号</a></span>
+</div>
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span></span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+      <!-- UY BEGIN -->
+      <!--
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      -->
+      <!-- UY END -->
+  
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+  <!-- 背景动画 -->
+  
+
+  <!-- 页面点击小红心 -->
+  
+
+  <!-- 音乐播放脚本 -->
+  
+
+</body>
+</html>
