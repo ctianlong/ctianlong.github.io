@@ -485,13 +485,13 @@ version: 5.1.0
 
 # dashang
 reward_comment:
-wechatpay: http://static.tongjilab.cn/image/png/wepayQR.png
-alipay: http://static.tongjilab.cn/image/png/alipayQR.png
+wechatpay: https://static.tongjilab.cn/image/png/wepayQR.png
+alipay: https://static.tongjilab.cn/image/png/alipayQR.png
 
 # Music
 music:
-  enable: false
-  title: Music
+  enable: enable
+  title: 放松一下
 
 # 背景动画
 background_animation:

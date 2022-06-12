@@ -26,9 +26,9 @@ date: 2017-02-06 16:34:36
 #### 队列管理器是否开启通道认证记录
 
 通道认证记录用来允许或阻止客户端应用程序对MQ队列管理器的连接，如果开启了，则需要保证当前的通道认证记录中的配置项允许你的应用程序通过你选定的服务器连接通道进行连接。常见的认证规则可以通过用户名、IP地址等进行允许或阻止连接的控制，具体的配置方法这里不作详述，需要注意的是队列管理器内置的系统对象，包括各种通道和通道认证记录，可以通过下图所示方式在MQ Explorer查看。如果你使用的是队列管理器内置的服务器连接通道，比如`SYSTEM.DEF.SVRCONN`，则需要考虑内置的通道认证记录，比如默认的`SYSTEM.*` 配置禁用了所有的系统通道，可以将该配置项删除，也可以修改该配置项。
-<center><img style="border-radius: 0.3125em; box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" src="http://static.tongjilab.cn/blog/20190926235859.png"><div style="display: inline-block; color: #999; padding: 2px;">队列管理器内置的各种系统通道</div></center>
+<center><img style="border-radius: 0.3125em; box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" src="https://static.tongjilab.cn/blog/20190926235859.png"><div style="display: inline-block; color: #999; padding: 2px;">队列管理器内置的各种系统通道</div></center>
 
-<center><img style="border-radius: 0.3125em; box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" src="http://static.tongjilab.cn/blog/20190927000022.png"><div style="display: inline-block; color: #999; padding: 2px;">队列管理器内置的通道认证记录</div></center>
+<center><img style="border-radius: 0.3125em; box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" src="https://static.tongjilab.cn/blog/20190927000022.png"><div style="display: inline-block; color: #999; padding: 2px;">队列管理器内置的通道认证记录</div></center>
 
 关于通道认证记录所造成的访问问题，最简单直接的方式便是将通道认证记录功能关闭，不过这样也就失去了对客户应用程序的连接授权控制。可以通过命令行指令关闭通道认证记录。
 
@@ -39,13 +39,13 @@ ALTER QMGR CHLAUTH(DISABLED)
 
 也可以通过MQ Explorer关闭。
 
-<center><img style="border-radius: 0.3125em; box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" src="http://static.tongjilab.cn/blog/20190927000055.png"></center>
+<center><img style="border-radius: 0.3125em; box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" src="https://static.tongjilab.cn/blog/20190927000055.png"></center>
 
 #### 注意服务器连接通道的`MCAUSER`（MCA用户标识）属性
 
 该属性表示通过该通道连接的应用程序在和队列管理器进行通信时所使用的用户名称，其值必须为MQ服务器上的`mqm`组内的用户，否则便会出现2035错误。需要注意，如果`MCAUSER`为空，则使用运行MQ应用程序所在的操作系统上的用户名称；如果`MCAUSER`不为空，则使用该值作为应用程序连接通道时使用的用户名称。
 
-<center><img style="border-radius: 0.3125em; box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" src="http://static.tongjilab.cn/blog/20190927000219.png"></center>
+<center><img style="border-radius: 0.3125em; box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" src="https://static.tongjilab.cn/blog/20190927000219.png"></center>
 
 可以通过命令行指令修改：
 
@@ -79,7 +79,7 @@ REFRESH SECURITY TYPE(CONNAUTH)
 
 除了上面两种命令行方式，也可以通过MQ Explorer关闭连接认证，如下图，在队列管理器的扩展属性中将连接认证一栏置为空即可。
 
-<center><img style="border-radius: 0.3125em; box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" src="http://static.tongjilab.cn/blog/20190927001434.png"></center>
+<center><img style="border-radius: 0.3125em; box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" src="https://static.tongjilab.cn/blog/20190927001434.png"></center>
 
 ---
 

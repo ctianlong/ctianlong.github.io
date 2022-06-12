@@ -1,8 +1,8 @@
 $(function(){
           var music = document.getElementById("bgMusic");
           var musicArr=[
-            {url:'http://static.tongjilab.cn/music/mp3/Sunburst.mp3',title:"sunburst"},
-            {url:'http://static.tongjilab.cn/music/mp3/Victory.mp3',title:"victory"}
+            {url:'https://static.tongjilab.cn/music/mp3/Sunburst.mp3',title:"sunburst"},
+            {url:'https://static.tongjilab.cn/music/mp3/Victory.mp3',title:"victory"}
           ];
 
           $("#audioBtn").click(function(){
