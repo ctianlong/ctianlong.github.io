@@ -82,6 +82,7 @@ deploy:
   repo:
     github: git@github.com:ctianlong/ctianlong.github.io.git
     # coding: git@e.coding.net:ctianlong/blog.git
+    # gitee: git@gitee.com:ctianlong/blog.git
 ##repo: https://github.com/ctianlong/ctianlong.github.io.git
   branch: master
   message: 'Daily updated：{{now("YYYY-MM-DD HH:mm:ss")}} by ctianlong'
